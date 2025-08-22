@@ -3,6 +3,7 @@ import { useState } from 'react';
 function App() {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
 	const [authorized, setAuthorized] = useState(false);
 
 	function handleLogin(e) {
@@ -11,6 +12,10 @@ function App() {
 
 	function handlePassword(e) {
 		setPassword(e.target.value);
+	}
+
+	function toggleShowPassword() {
+		setShowPassword((val) => !val);
 	}
 
 	function handleLoginInSystem(e) {
@@ -45,25 +50,26 @@ function App() {
 				<h1>Login Here</h1>
 				<label>
 					Login <br></br>
-					<input
-						type='text'
-						name='login'
-						placeholder='login'
-						value={login}
-						onChange={handleLogin}
-					/>
+					<input 
+            type='text' 
+            name='login' 
+            placeholder='enter your login' 
+            value={login} 
+            onChange={handleLogin} 
+          />
 				</label>
 				<label>
 					Password <br></br>
 					<input
-						type='password'
+						type={showPassword ? 'text' : 'password'}
 						name='password'
-						placeholder='●●●●●●'
+						placeholder='enter your password'
 						value={password}
 						onChange={handlePassword}
 						minLength={6}
 					/>
 				</label>
+				{password && <span onClick={toggleShowPassword}>{showPassword ? 'hide password' : 'show password' }</span>}
 				<button onClick={handleLoginInSystem} disabled={!buttonEnabled}>
 					Log In
 				</button>
