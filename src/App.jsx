@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [login, setLogin] = useState('');
+	const [password, setPassword] = useState('');
+	const [authorized, setAuthorized] = useState(false);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	function handleLogin(e) {
+		setLogin(e.target.value);
+	}
+
+	function handlePassword(e) {
+		setPassword(e.target.value);
+	}
+
+	function handleLoginInSystem(e) {
+		e.preventDefault();
+		setAuthorized(true);
+		fetch('login', login, password);
+	}
+
+	function handleLogout(e) {
+		e.preventDefault();
+		setAuthorized(false);
+		fetch('logout', login);
+	}
+
+	const buttonEnabled = login.length > 5 && password.length > 5;
+
+	if (authorized) {
+		return (
+			<div>
+				<form>
+					<h2>Hello, {login}!</h2>
+					<p>You are authorized</p>
+					<button onClick={handleLogout}>Log Out</button>
+				</form>
+			</div>
+		);
+	}
+
+	return (
+		<div>
+			<form>
+				<h1>Login Here</h1>
+				<label>
+					Login <br></br>
+					<input
+						type='text'
+						name='login'
+						placeholder='login'
+						value={login}
+						onChange={handleLogin}
+					/>
+				</label>
+				<label>
+					Password <br></br>
+					<input
+						type='password'
+						name='password'
+						placeholder='●●●●●●'
+						value={password}
+						onChange={handlePassword}
+						minLength={6}
+					/>
+				</label>
+				<button onClick={handleLoginInSystem} disabled={!buttonEnabled}>
+					Log In
+				</button>
+			</form>
+		</div>
+	);
 }
 
-export default App
+function fetch(...args) {
+	console.log('Data:', args);
+}
+
+export default App;

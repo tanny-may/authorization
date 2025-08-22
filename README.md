@@ -1,12 +1,15 @@
-# React + Vite
+Форма авторизации. 
+Логин, пароль, кнопка отобразить пароль, кнопка входа.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+По этому адресу https://dci.ostcard.su/api крутится бэкенд-сервер.
+Авторизация Basic происходит по адресу https://dci.ostcard.su/api/login.
+В ответе придет идентификатор, можно послать запрос, посмотреть как он придет.
+Login: DaughterUser
+Pass: Admin12345
+Полученное значение идентификатора нужно будет вставлять в последующие запросы как есть в заголовок Authorization.
+После авторизации, отправить запрос(должен отправляться раз в 10 секунд, чтобы обновлять информацию) на https://dci.ostcard.su/api/login/user (уже с заголовком).
+Посмотреть, как придет ответ, и отобразить просто информационное окно какое-нибудь с полями например: name, bankName, branchName, typeName и Description.
 
-Currently, two official plugins are available:
+На этом же окне должна быть кнопка разлогина, также заголовок в запросе с идентификатором по адресу https://dci.ostcard.su/api/login/logout - после нажатия отобразить опять мейн форму авторизации.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+На любой запрос, если придет ответ {"errorType":"NEED_LOGIN"}, отобразить форму авторизации (пользователя разлогинил другой сервис).
