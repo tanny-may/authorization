@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 export function LoginForm({ setAuthorized }) {
-  const [login, setLogin] = useState('');
+	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -19,8 +20,30 @@ export function LoginForm({ setAuthorized }) {
 
 	function handleLoginInSystem(e) {
 		e.preventDefault();
-		setAuthorized(true);
-		fetch('login', login, password);
+
+		const headers = new Headers();
+		const basicAuth = btoa(`${login}:${password}`);
+		headers.append('Authorization', 'Basic ' + basicAuth);
+
+		fetch('https://dci.ostcard.su/api/login/', {
+			method: 'POST',
+			headers: headers,
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Ошибка: ' + response.status);
+				}
+				return response.json();
+			})
+			.then((data) => {
+				const identifier = data['identifier'];
+				Cookies.set('identifier', identifier, { expires: 7, path: '' });
+				setAuthorized(true);
+			})
+      .catch((error) => {
+        console.log('error:', error)
+      });
+		// TODO добавить отображение ошибки при неправильных кредах
 	}
 
 	const buttonEnabled = login.length > 5 && password.length > 5;
@@ -28,16 +51,16 @@ export function LoginForm({ setAuthorized }) {
 	return (
 		<div>
 			<form>
-				<h1>Login Here</h1>
+				<h1>Authorization</h1>
 				<label>
 					Login <br></br>
-					<input 
-            type='text' 
-            name='login' 
-            placeholder='enter your login' 
-            value={login} 
-            onChange={handleLogin} 
-          />
+					<input
+						type='text'
+						name='login'
+						placeholder='enter your login'
+						value={login}
+						onChange={handleLogin}
+					/>
 				</label>
 				<label>
 					Password <br></br>
@@ -50,15 +73,13 @@ export function LoginForm({ setAuthorized }) {
 						minLength={6}
 					/>
 				</label>
-				{password && <span onClick={toggleShowPassword}>{showPassword ? 'hide password' : 'show password' }</span>}
+				{password && (
+					<span onClick={toggleShowPassword}>{showPassword ? 'hide password' : 'show password'}</span>
+				)}
 				<button onClick={handleLoginInSystem} disabled={!buttonEnabled}>
 					Log In
 				</button>
 			</form>
 		</div>
 	);
-}
-
-function fetch(...args) {
-	console.log('Data:', args);
 }
