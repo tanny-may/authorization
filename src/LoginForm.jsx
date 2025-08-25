@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+
+const minLength = 3;
+
 export function LoginForm({ authorize }) {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
@@ -56,7 +59,7 @@ export function LoginForm({ authorize }) {
 			});
 	}
 
-	const buttonEnabled = login.length > 5 && password.length > 5;
+	const buttonEnabled = login.length >= minLength && password.length >= minLength;
 
 	return (
 		<div>
@@ -69,6 +72,7 @@ export function LoginForm({ authorize }) {
 						placeholder='enter your login'
 						value={login}
 						onChange={handleLogin}
+				
 					/>
 				</label>
 				{loginError && <span className='error'>{loginError}</span>}
@@ -79,7 +83,6 @@ export function LoginForm({ authorize }) {
 						placeholder='enter your password'
 						value={password}
 						onChange={handlePassword}
-						minLength={3}
 					/>
 				</label>
 				{passwordError && <span className='error'>{passwordError}</span>}
