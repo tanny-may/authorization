@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
-export function UserPage({ setAuthorized }) {
+export function UserPage({ unAuthorize }) {
 	let [userData, setUserData] = useState({});
 
 	async function updateUserData() {
@@ -15,9 +15,8 @@ export function UserPage({ setAuthorized }) {
 		})
 			.then((response) => {
 				if (!response.ok) {
-          // вынести в функцию и передавать её в пропсах
-					setAuthorized(false);
-          Cookies.remove('identifier');
+					unAuthorize();
+					return;
 				}
 				return response.json();
 			})
@@ -45,9 +44,7 @@ export function UserPage({ setAuthorized }) {
 			method: 'GET',
 			headers: headers,
 		}).then(() => {
-      // вынести в функцию и передавать её в пропсах
-			setAuthorized(false);
-			Cookies.remove('identifier');
+			unAuthorize();
 		});
 	}
 

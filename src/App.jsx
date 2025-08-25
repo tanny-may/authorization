@@ -6,10 +6,20 @@ import Cookies from 'js-cookie';
 function App() {
 	const [authorized, setAuthorized] = useState(!!Cookies.get('identifier'));
 
-	if (!authorized) {
-		return <LoginForm setAuthorized={setAuthorized} />;
+	function authorize(identifier) {
+		Cookies.set('identifier', identifier, { expires: 7, path: '' });
+		setAuthorized(true);
 	}
-	return <UserPage setAuthorized={setAuthorized} />;
+
+	function unAuthorize() {
+		Cookies.remove('identifier');
+		setAuthorized(false);
+	}
+
+	if (!authorized) {
+		return <LoginForm authorize={authorize} />;
+	}
+	return <UserPage unAuthorize={unAuthorize}/>;
 }
 
 export default App;

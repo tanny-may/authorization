@@ -1,23 +1,54 @@
 import { useState } from 'react';
-import Cookies from 'js-cookie';
 
-export function LoginForm({ setAuthorized }) {
+export function LoginForm({ authorize }) {
 	const [login, setLogin] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
-
-	function handleLogin(e) {
-		setLogin(e.target.value);
+	const [loginError, setLoginError] = useState('');
+	const [passwordError, setPasswordError] = useState('');
+	
+	function isLoginValid(event) {
+		const loginAvailableSymbols = /^[A-Za-z0-9]*$/;
+    if (loginAvailableSymbols.test(event.target.value)) {
+			return true;
+		} 
+		return false;
 	}
 
-	function handlePassword(e) {
-		setPassword(e.target.value);
+	function isPasswordValid(event) {
+		const passwordAvailableSymbols = /^[A-Za-z0-9!#$%&'*+\-./:=?^_`{|}~]+$/;
+    if (passwordAvailableSymbols.test(event.target.value)) {
+			return true;
+		} 
+		return false;
+	}
+
+	function handleLogin(event) {
+		setLogin(event.target.value);
+
+    if (isLoginValid(event)) {
+      setLogin(event.target.value);
+    	setLoginError('');
+  	} else {
+    	setLoginError('Логин может содержать только латинские буквы и цифры');
+  	}
+	}
+
+	function handlePassword(event) {
+		setPassword(event.target.value);
+
+		if (isPasswordValid(event)) {
+      setPassword(event.target.value);
+    	setPasswordError('');
+  	} else {
+    	setPasswordError('Пароль может содержать только латинские буквы, цифры и спец.символы');
+  	}
 	}
 
 	function toggleShowPassword() {
 		setShowPassword((val) => !val);
 	}
-
+  
 	function handleLoginInSystem(e) {
 		e.preventDefault();
 
@@ -36,14 +67,11 @@ export function LoginForm({ setAuthorized }) {
 				return response.json();
 			})
 			.then((data) => {
-				const identifier = data['identifier'];
-				Cookies.set('identifier', identifier, { expires: 7, path: '' });
-				setAuthorized(true);
+				authorize(data['identifier'])
 			})
       .catch((error) => {
         console.log('error:', error)
       });
-		// TODO добавить отображение ошибки при неправильных кредах
 	}
 
 	const buttonEnabled = login.length > 5 && password.length > 5;
@@ -53,7 +81,6 @@ export function LoginForm({ setAuthorized }) {
 			<form>
 				<h1>Authorization</h1>
 				<label>
-					Login <br></br>
 					<input
 						type='text'
 						name='login'
@@ -62,8 +89,8 @@ export function LoginForm({ setAuthorized }) {
 						onChange={handleLogin}
 					/>
 				</label>
+				{loginError && <span className='error'>{loginError}</span>}
 				<label>
-					Password <br></br>
 					<input
 						type={showPassword ? 'text' : 'password'}
 						name='password'
@@ -73,8 +100,9 @@ export function LoginForm({ setAuthorized }) {
 						minLength={6}
 					/>
 				</label>
+				{passwordError && <span className='error'>{passwordError}</span>}
 				{password && (
-					<span onClick={toggleShowPassword}>{showPassword ? 'hide password' : 'show password'}</span>
+					<span onClick={toggleShowPassword} className='hide'>{showPassword ? 'hide password' : 'show password'}</span>
 				)}
 				<button onClick={handleLoginInSystem} disabled={!buttonEnabled}>
 					Log In
