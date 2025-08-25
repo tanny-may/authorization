@@ -12,14 +12,14 @@ function App() {
 	}
 
 	function unAuthorize() {
-		Cookies.remove('identifier');
+		Cookies.remove('identifier', { path: '' });
 		setAuthorized(false);
 	}
 
 	if (!authorized) {
 		return <LoginForm authorize={authorize} />;
 	}
-	return <UserPage unAuthorize={unAuthorize}/>;
+	return <UserPage unAuthorize={unAuthorize} />;
 }
 
 export default App;

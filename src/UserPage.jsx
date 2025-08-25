@@ -16,12 +16,15 @@ export function UserPage({ unAuthorize }) {
 			.then((response) => {
 				if (!response.ok) {
 					unAuthorize();
-					return;
+					throw new Error('Ошибка: ' + response.status);
 				}
 				return response.json();
 			})
 			.then((updatedData) => {
 				setUserData(updatedData);
+			})
+			.catch((error) => {
+				console.log('error:', error);
 			});
 	}
 

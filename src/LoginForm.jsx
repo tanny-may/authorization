@@ -6,49 +6,31 @@ export function LoginForm({ authorize }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const [loginError, setLoginError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
-	
-	function isLoginValid(event) {
-		const loginAvailableSymbols = /^[A-Za-z0-9]*$/;
-    if (loginAvailableSymbols.test(event.target.value)) {
-			return true;
-		} 
-		return false;
-	}
-
-	function isPasswordValid(event) {
-		const passwordAvailableSymbols = /^[A-Za-z0-9!#$%&'*+\-./:=?^_`{|}~]+$/;
-    if (passwordAvailableSymbols.test(event.target.value)) {
-			return true;
-		} 
-		return false;
-	}
 
 	function handleLogin(event) {
 		setLogin(event.target.value);
 
-    if (isLoginValid(event)) {
-      setLogin(event.target.value);
-    	setLoginError('');
-  	} else {
-    	setLoginError('Логин может содержать только латинские буквы и цифры');
-  	}
+		if (isLoginValid(event.target.value)) {
+			setLoginError('');
+		} else {
+			setLoginError('Логин может содержать только латинские буквы и цифры');
+		}
 	}
 
 	function handlePassword(event) {
 		setPassword(event.target.value);
 
-		if (isPasswordValid(event)) {
-      setPassword(event.target.value);
-    	setPasswordError('');
-  	} else {
-    	setPasswordError('Пароль может содержать только латинские буквы, цифры и спец.символы');
-  	}
+		if (isPasswordValid(event.target.value)) {
+			setPasswordError('');
+		} else {
+			setPasswordError('Пароль может содержать только латинские буквы, цифры и спец.символы');
+		}
 	}
 
 	function toggleShowPassword() {
 		setShowPassword((val) => !val);
 	}
-  
+
 	function handleLoginInSystem(e) {
 		e.preventDefault();
 
@@ -67,11 +49,11 @@ export function LoginForm({ authorize }) {
 				return response.json();
 			})
 			.then((data) => {
-				authorize(data['identifier'])
+				authorize(data['identifier']);
 			})
-      .catch((error) => {
-        console.log('error:', error)
-      });
+			.catch((error) => {
+				console.log('error:', error);
+			});
 	}
 
 	const buttonEnabled = login.length > 5 && password.length > 5;
@@ -102,7 +84,9 @@ export function LoginForm({ authorize }) {
 				</label>
 				{passwordError && <span className='error'>{passwordError}</span>}
 				{password && (
-					<span onClick={toggleShowPassword} className='hide'>{showPassword ? 'hide password' : 'show password'}</span>
+					<span onClick={toggleShowPassword} className='hide'>
+						{showPassword ? 'hide password' : 'show password'}
+					</span>
 				)}
 				<button onClick={handleLoginInSystem} disabled={!buttonEnabled}>
 					Log In
@@ -110,4 +94,14 @@ export function LoginForm({ authorize }) {
 			</form>
 		</div>
 	);
+}
+
+function isLoginValid(value) {
+	const loginAvailableSymbols = /^[A-Za-z0-9]*$/;
+	return loginAvailableSymbols.test(value);
+}
+
+function isPasswordValid(value) {
+	const passwordAvailableSymbols = /^[A-Za-z0-9!#$%&'*+\-./:=?^_`{|}~]+$/;
+	return passwordAvailableSymbols.test(value);
 }
