@@ -79,7 +79,7 @@ export function LoginForm({ authorize }) {
 						placeholder='enter your password'
 						value={password}
 						onChange={handlePassword}
-						minLength={6}
+						minLength={3}
 					/>
 				</label>
 				{passwordError && <span className='error'>{passwordError}</span>}
