@@ -1,15 +1,39 @@
-Форма авторизации. 
-Логин, пароль, кнопка отобразить пароль, кнопка входа.
+# authorization
 
-По этому адресу https://dci.ostcard.su/api крутится бэкенд-сервер.
-Авторизация Basic происходит по адресу https://dci.ostcard.su/api/login.
-В ответе придет идентификатор, можно послать запрос, посмотреть как он придет.
-Login: DaughterUser
-Pass: Admin12345
-Полученное значение идентификатора нужно будет вставлять в последующие запросы как есть в заголовок Authorization.
-После авторизации, отправить запрос(должен отправляться раз в 10 секунд, чтобы обновлять информацию) на https://dci.ostcard.su/api/login/user (уже с заголовком).
-Посмотреть, как придет ответ, и отобразить просто информационное окно какое-нибудь с полями например: name, bankName, branchName, typeName и Description.
+## Посмотреть можно здесь 
+[https://tanny-may.github.io/authorization/]
 
-На этом же окне должна быть кнопка разлогина, также заголовок в запросе с идентификатором по адресу https://dci.ostcard.su/api/login/logout - после нажатия отобразить опять мейн форму авторизации.
+## О проекте
+Форма авторизации.
 
-На любой запрос, если придет ответ {"errorType":"NEED_LOGIN"}, отобразить форму авторизации (пользователя разлогинил другой сервис).
+<img width="1624" height="796" alt="image" src="https://github.com/user-attachments/assets/4d1f5191-9918-495f-8c75-45de8e473f69" />
+
+## Функционал
+* ввод логина и пароля
+* отправка введённых данных
+* получение и отображение данных о пользователе
+
+## Библиотеки
+При написании кода использовались библиотеки:
+* [![React][React.js]][React-url]
+* [![Vite][Vite.js]][Vite-url]
+
+## Запуск проекта
+1. Клонировать репозиторий
+   ```sh
+   git clone https://github.com/tanny-may/authorization
+   ```
+2. Установить пакеты
+   ```sh
+   npm install
+   ```
+3. Запустить сайт
+   ```sh
+   npm run dev
+   ```
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[React.js]: https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB
+[Vite.js]: https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white
+[React-url]: https://reactjs.org/
+[Vite-url]: https://vitejs.dev/
